@@ -19,6 +19,7 @@ const loginAction = (payload) => {
     dispatch({type: NULLIFY_ERROR});
     dispatch({type: API_LOADING_START});
     try {
+      console.log(payload);
       const response = await axios.post(`${url}/login`, payload);
       const token = response.data.token;
       console.log(token);
@@ -33,8 +34,44 @@ const loginAction = (payload) => {
     }
   };
 };
-const registerAction = (payload) => {};
-const keepLoginAction = (payload) => {};
+const registerAction = (payload) => {
+  return async (dispatch) => {
+    dispatch({type: NULLIFY_ERROR});
+    dispatch({type: API_LOADING_START});
+    try {
+      const response = await axios.post(`${url}/register`, payload);
+      const token = response.data.token;
+      await AsyncStorage.setItem('token', token);
+      dispatch({type: AUTH_SIGN, payload: response.data});
+      dispatch({type: API_LOADING_SUCCESS});
+    } catch (err) {
+      console.log(err.response);
+      dispatch({type: API_LOADING_FAILED, payload: err.response.data.error});
+    }
+  };
+};
+const keepLoginAction = (payload) => {
+  return async (dispatch) => {
+    dispatch({type: NULLIFY_ERROR});
+    dispatch({type: API_LOADING_START});
+    try {
+      const token = await AsyncStorage.getItem('token');
+      const headers = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.post(`${url}/keep-login`, {}, headers);
+      console.log('ea', headers);
+      console.log(response.data);
+      dispatch({type: AUTH_SIGN, payload: response.data});
+      dispatch({type: API_LOADING_SUCCESS});
+    } catch (err) {
+      console.log(err.response);
+      dispatch({type: API_LOADING_FAILED, payload: err.response.data.error});
+    }
+  };
+};
 
 const closeErrorAction = () => {
   return {

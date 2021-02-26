@@ -7,26 +7,26 @@ const AuthModal = () => {
   const dispatch = useDispatch();
   const {isError, errorMessage} = useSelector((state) => state.authReducer);
   return (
-    <View style={styles.centeredView}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isError}
-        onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>{errorMessage}</Text>
-            <Pressable
-              style={[styles.button, styles.buttonClose]}
-              onPress={() => dispatch(closeErrorAction())}>
-              <Text style={styles.textStyle}>close</Text>
-            </Pressable>
-          </View>
+    // <View style={styles.centeredView}>
+    <Modal
+      animationType="slide"
+      transparent={true}
+      visible={isError}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.');
+      }}>
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          <Text style={styles.modalText}>{errorMessage}</Text>
+          <Pressable
+            style={[styles.button, styles.buttonClose]}
+            onPress={() => dispatch(closeErrorAction())}>
+            <Text style={styles.textStyle}>close</Text>
+          </Pressable>
         </View>
-      </Modal>
-    </View>
+      </View>
+    </Modal>
+    // </View>
   );
 };
 

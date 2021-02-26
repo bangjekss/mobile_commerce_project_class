@@ -1,7 +1,7 @@
 import {Text, View} from 'native-base';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import {Provider} from 'react-redux';
+import {Provider, useDispatch} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit';
 import reducer from './src/redux/reducer';
 import {AuthStack, Main} from './src/navigation';
@@ -9,6 +9,8 @@ import {AuthStack, Main} from './src/navigation';
 const store = configureStore({
   reducer,
 });
+
+const didMount = () => {};
 
 const App = () => {
   return (
