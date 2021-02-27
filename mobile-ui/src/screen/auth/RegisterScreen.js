@@ -18,27 +18,27 @@ import {
 import {Grid, Row, Col} from 'react-native-easy-grid';
 import React, {useState, useEffect} from 'react';
 import {Dimensions, Image, Modal, ScrollView, StyleSheet} from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {AuthModal} from '../../component';
 import {registerAction} from '../../redux/action';
-import {background_color, primary_color} from '..';
+import {background_color, primary_color} from '../style';
 import {API_LOADING_FAILED} from '../../redux/type';
+import Spinkit from 'react-native-spinkit';
 
 const RegisterScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const {isLoading} = useSelector((state) => state.authReducer);
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
   const [cpassword, setCPassword] = useState(null);
 
   const handleRegisBtn = () => {
-    // console.log(username, email, password, cpassword);
     const payload = {
       username,
       email,
       password,
     };
-    // dispatch(registerAction(payload));
     if (
       username === null ||
       username === '' ||
@@ -108,16 +108,34 @@ const RegisterScreen = ({navigation}) => {
                   onPress={() => navigation.replace('Login')}>
                   <Text style={{color: 'black'}}>Have an account?</Text>
                 </Button>
-                <Button
-                  onPress={handleRegisBtn}
-                  style={{
-                    backgroundColor: background_color,
-                    minWidth: Dimensions.get('screen').width / 4,
-                    justifyContent: 'center',
-                    borderRadius: 50,
-                  }}>
-                  <Text style={{color: 'black'}}>Register</Text>
-                </Button>
+                {isLoading ? (
+                  <Button
+                    disabled={isLoading}
+                    onPress={handleRegisBtn}
+                    style={{
+                      backgroundColor: background_color,
+                      minWidth: Dimensions.get('screen').width / 4,
+                      justifyContent: 'center',
+                      borderRadius: 50,
+                    }}>
+                    <Spinkit
+                      color={primary_color}
+                      size={25}
+                      type="ChasingDots"
+                    />
+                  </Button>
+                ) : (
+                  <Button
+                    onPress={handleRegisBtn}
+                    style={{
+                      backgroundColor: background_color,
+                      minWidth: Dimensions.get('screen').width / 4,
+                      justifyContent: 'center',
+                      borderRadius: 50,
+                    }}>
+                    <Text style={{color: 'black'}}>Register</Text>
+                  </Button>
+                )}
               </View>
             </Col>
           </Row>

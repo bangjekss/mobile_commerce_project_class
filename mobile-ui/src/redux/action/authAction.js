@@ -3,10 +3,13 @@ import {
   API_LOADING_FAILED,
   API_LOADING_START,
   API_LOADING_SUCCESS,
+  AUTH_LOGOUT,
   AUTH_SIGN,
+  GET_CART,
   NULLIFY_ERROR,
 } from '../type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getCartAction} from './cartAction';
 
 const {local} = require('../../../local_ip');
 
@@ -25,6 +28,7 @@ const loginAction = (payload) => {
       console.log(token);
       await AsyncStorage.setItem('token', token);
       dispatch({type: AUTH_SIGN, payload: response.data});
+      dispatch(getCartAction(response.data.id));
       dispatch({type: API_LOADING_SUCCESS});
     } catch (err) {
       console.log(err.response);
@@ -65,11 +69,20 @@ const keepLoginAction = (payload) => {
       console.log('ea', headers);
       console.log(response.data);
       dispatch({type: AUTH_SIGN, payload: response.data});
+      dispatch(getCartAction(response.data.id));
       dispatch({type: API_LOADING_SUCCESS});
     } catch (err) {
       console.log(err.response);
       dispatch({type: API_LOADING_FAILED, payload: err.response.data.error});
     }
+  };
+};
+const logoutAction = () => {
+  return async (dispatch) => {
+    dispatch({type: NULLIFY_ERROR});
+    dispatch({type: API_LOADING_START});
+    dispatch({type: AUTH_LOGOUT});
+    dispatch({type: API_LOADING_SUCCESS});
   };
 };
 
@@ -79,4 +92,10 @@ const closeErrorAction = () => {
   };
 };
 
-export {loginAction, registerAction, keepLoginAction, closeErrorAction};
+export {
+  loginAction,
+  registerAction,
+  keepLoginAction,
+  closeErrorAction,
+  logoutAction,
+};

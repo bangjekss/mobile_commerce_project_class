@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Button} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {keepLoginAction} from '../redux/action';
-import {Home, AuthStack} from './';
+import {AuthStack, HomeTab} from './';
 
 const Main = () => {
   // const dispatch = useDispatch();
@@ -12,7 +12,7 @@ const Main = () => {
   }, []);
   const {isLogin} = useSelector((state) => state.authReducer);
 
-  return <>{isLogin ? <Home /> : <AuthStack />}</>;
+  return <>{isLogin ? <HomeTab /> : <AuthStack />}</>;
 };
 
 export default Main;

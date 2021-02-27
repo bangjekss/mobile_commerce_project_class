@@ -1,5 +1,6 @@
 import Main from './Main';
 import AuthStack from './AuthStack';
-import Home from './Home';
+import HomeTab from './HomeTab';
+import ProductStack from './ProductStack';
 
-export {Main, AuthStack, Home};
+export {Main, AuthStack, HomeTab, ProductStack};

@@ -18,13 +18,16 @@ import {
 import {Grid, Row, Col} from 'react-native-easy-grid';
 import React, {useState, useEffect} from 'react';
 import {Dimensions, Image, Modal, ScrollView, StyleSheet} from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {AuthModal} from '../../component';
 import {loginAction} from '../../redux/action';
-import {background_color, primary_color} from '..';
+import {background_color, primary_color} from '../style';
+import Spinkit from 'react-native-spinkit';
+import {API_LOADING_FAILED} from '../../redux/type';
 
 const LoginScreen = ({navigation}) => {
   const dispatch = useDispatch();
+  const {isLoading} = useSelector((state) => state.authReducer);
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
 
@@ -34,8 +37,19 @@ const LoginScreen = ({navigation}) => {
       username,
       password,
     };
-
-    dispatch(loginAction(payload));
+    if (
+      username === null ||
+      username === '' ||
+      password === null ||
+      password === ''
+    ) {
+      return dispatch({
+        type: API_LOADING_FAILED,
+        payload: 'The fields must filled',
+      });
+    } else {
+      dispatch(loginAction(payload));
+    }
   };
 
   return (
@@ -72,16 +86,34 @@ const LoginScreen = ({navigation}) => {
                   onPress={() => navigation.replace('Register')}>
                   <Text style={{color: 'black'}}>Doesn't have an account?</Text>
                 </Button>
-                <Button
-                  onPress={() => handleLoginBtn()}
-                  style={{
-                    backgroundColor: background_color,
-                    minWidth: Dimensions.get('screen').width / 4,
-                    justifyContent: 'center',
-                    borderRadius: 50,
-                  }}>
-                  <Text style={{color: 'black'}}>Login </Text>
-                </Button>
+                {isLoading ? (
+                  <Button
+                    disabled={isLoading}
+                    onPress={() => handleLoginBtn()}
+                    style={{
+                      backgroundColor: background_color,
+                      minWidth: Dimensions.get('screen').width / 4,
+                      justifyContent: 'center',
+                      borderRadius: 50,
+                    }}>
+                    <Spinkit
+                      color={primary_color}
+                      size={25}
+                      type="ChasingDots"
+                    />
+                  </Button>
+                ) : (
+                  <Button
+                    onPress={() => handleLoginBtn()}
+                    style={{
+                      backgroundColor: background_color,
+                      minWidth: Dimensions.get('screen').width / 4,
+                      justifyContent: 'center',
+                      borderRadius: 50,
+                    }}>
+                    <Text style={{color: 'black'}}>Login</Text>
+                  </Button>
+                )}
               </View>
             </Col>
           </Row>
