@@ -22,10 +22,8 @@ const loginAction = (payload) => {
     dispatch({type: NULLIFY_ERROR});
     dispatch({type: API_LOADING_START});
     try {
-      console.log(payload);
       const response = await axios.post(`${url}/login`, payload);
       const token = response.data.token;
-      console.log(token);
       await AsyncStorage.setItem('token', token);
       dispatch({type: AUTH_SIGN, payload: response.data});
       dispatch(getCartAction(response.data.id));
@@ -66,8 +64,6 @@ const keepLoginAction = (payload) => {
         },
       };
       const response = await axios.post(`${url}/keep-login`, {}, headers);
-      console.log('ea', headers);
-      console.log(response.data);
       dispatch({type: AUTH_SIGN, payload: response.data});
       dispatch(getCartAction(response.data.id));
       dispatch({type: API_LOADING_SUCCESS});

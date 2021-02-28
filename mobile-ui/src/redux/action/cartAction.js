@@ -17,6 +17,7 @@ const addToCartAction = (payload) => {
     dispatch({type: API_LOADING_START});
     try {
       const {userID} = payload;
+      console.log(payload);
       await axios.post(`${url}/${userID}`, payload);
       dispatch({type: ADD_TO_CART, payload});
       dispatch({type: API_LOADING_SUCCESS});
@@ -44,4 +45,38 @@ const getCartAction = (userID) => {
   };
 };
 
-export {addToCartAction, getCartAction};
+const changeQtyCartAction = (payload) => {
+  return async (dispatch) => {
+    dispatch({type: NULLIFY_ERROR});
+    dispatch({type: API_LOADING_START});
+    try {
+      const {quantity, id, userID} = payload;
+      await axios.patch(`${url}/${id}`, {quantity});
+      dispatch(getCartAction(userID));
+      dispatch({type: API_LOADING_SUCCESS});
+      // alert('qty changed');
+    } catch (err) {
+      console.log(err.response);
+      dispatch({type: API_LOADING_FAILED, payload: err.response.data.error});
+    }
+  };
+};
+
+const deleteCartAction = (payload) => {
+  return async (dispatch) => {
+    dispatch({type: NULLIFY_ERROR});
+    dispatch({type: API_LOADING_START});
+    try {
+      const {id, userID} = payload;
+      await axios.delete(`${url}/${id}`);
+      dispatch(getCartAction(userID));
+      dispatch({type: API_LOADING_SUCCESS});
+      alert('product deleted from cart');
+    } catch (err) {
+      console.log(err.response);
+      dispatch({type: API_LOADING_FAILED, payload: err.response.data.error});
+    }
+  };
+};
+
+export {addToCartAction, getCartAction, changeQtyCartAction, deleteCartAction};

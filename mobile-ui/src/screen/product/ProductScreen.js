@@ -6,23 +6,37 @@ import Swiper from 'react-native-web-swiper';
 import {local} from '../../../local_ip';
 import {background_color, primary_color, surface_color} from '../style';
 import {Divider} from 'react-native-elements';
-import {addToCartAction} from '../../redux/action';
+import {addToCartAction, changeQtyCartAction} from '../../redux/action';
 
-const ProductScreen = ({route}) => {
+const ProductScreen = ({route, navigation}) => {
   const {id} = route.params;
   const dispatch = useDispatch();
   const [qty, setQty] = useState(1);
   const userID = useSelector((state) => state.authReducer.id);
   const {productList} = useSelector((state) => state.productReducer);
+  const {cart} = useSelector((state) => state.cartReducer);
   const product = productList.find((value) => value.id === id);
+  console.log(userID);
   const handleBuyBtn = () => {
-    // console.log('ea');
-    const payload = {
-      userID,
-      productID: id,
-      quantity: qty,
-    };
-    dispatch(addToCartAction(payload));
+    const existProduct = cart.find((value) => value.productID === id);
+    console.log(route.params);
+    if (existProduct) {
+      const payload = {
+        userID,
+        id: existProduct.id,
+        quantity: existProduct.quantity + qty,
+      };
+      dispatch(changeQtyCartAction(payload));
+      alert('qty changed');
+      return navigation.goBack();
+    } else {
+      const payload = {
+        userID,
+        productID: id,
+        quantity: qty,
+      };
+      dispatch(addToCartAction(payload));
+    }
   };
   return (
     <Container style={{flex: 1, backgroundColor: primary_color}}>

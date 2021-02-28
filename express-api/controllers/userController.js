@@ -1,8 +1,8 @@
-const con = require('../database');
-const encryptHandler = require('../handlers/encryptHandler');
+const con = require("../database");
+const encryptHandler = require("../handlers/encryptHandler");
 const {
   jwt: { createToken },
-} = require('../handlers/');
+} = require("../handlers/");
 
 module.exports = {
   selectAllUsers: async (req, res, next) => {
@@ -16,8 +16,6 @@ module.exports = {
   login: async (req, res, next) => {
     const { username, password } = req.body;
     const hash = encryptHandler(password);
-    // console.log(req.body, hash);
-
     try {
       const [
         users,
@@ -31,7 +29,7 @@ module.exports = {
       let statusCode;
       users.length !== 0
         ? (response = { ...users[0], token: createToken(users[0]) })
-        : (response = { error: 'user not found' });
+        : (response = { error: "user not found" });
       response.error ? (statusCode = 404) : (statusCode = 200);
       return res.status(statusCode).send(response);
     } catch (err) {
@@ -41,13 +39,16 @@ module.exports = {
   register: async (req, res, next) => {
     try {
       req.body.password = encryptHandler(req.body.password);
-      const [insertUser] = await con.promise().query(`insert into users set ?`, req.body);
-      const [getUser] = await con.promise().query(
-        `
-          select id, username, email, roleID from users where id = ?
-        `,
-        [insertUser.insertId]
-      );
+      const [insertUser] = await con
+        .promise()
+        .query(`insert into users set ?`, req.body);
+      const [
+        getUser,
+      ] = await con
+        .promise()
+        .query(`select id, username, email, roleID from users where id = ?`, [
+          insertUser.insertId,
+        ]);
       const response = {
         ...getUser[0],
         token: createToken(getUser[0]),
@@ -64,7 +65,9 @@ module.exports = {
         user,
       ] = await con
         .promise()
-        .query(`select id, username, email, roleID from users where id = ?`, [id]);
+        .query(`select id, username, email, roleID from users where id = ?`, [
+          id,
+        ]);
       const response = {
         ...user[0],
         token: req.token,

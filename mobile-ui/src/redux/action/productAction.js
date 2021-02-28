@@ -10,12 +10,13 @@ import {
 
 const url = `${local}/product`;
 
-const getProducts = () => {
+const getProducts = (search) => {
   return async (dispatch) => {
     dispatch({type: NULLIFY_ERROR});
     dispatch({type: API_LOADING_START});
     try {
-      const response = await axios.get(`${url}`);
+      const response = await axios.get(`${url}?name=${search}`);
+      console.log(response.data);
       dispatch({type: GET_PRODUCTS, payload: response.data});
       dispatch({type: API_LOADING_SUCCESS});
     } catch (err) {

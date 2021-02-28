@@ -5,6 +5,7 @@ import {getCartAction, logoutAction} from '../redux/action';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {surface_color} from '../screen/style';
 import {ProductStack} from '.';
+import {cartScreen} from '../screen/product';
 
 const Tab = createBottomTabNavigator();
 const Post = () => {
@@ -37,7 +38,7 @@ const Cart = () => {
 };
 
 const HomeTab = () => {
-  const lenght = useSelector((state) => state.cartReducer.cart.length);
+  const {cart} = useSelector((state) => state.cartReducer);
   return (
     <Tab.Navigator
       initialRouteName="Feed"
@@ -61,8 +62,8 @@ const HomeTab = () => {
       <Tab.Screen name="Post" component={Post} />
       <Tab.Screen
         name="Cart"
-        component={Cart}
-        options={{tabBarBadge: lenght}}
+        component={cartScreen}
+        options={{tabBarBadge: cart.length >= 1 ? cart.length : null}}
       />
     </Tab.Navigator>
   );

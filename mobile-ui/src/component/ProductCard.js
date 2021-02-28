@@ -7,7 +7,7 @@ import {lorem} from 'faker';
 import {background_color, primary_color, surface_color} from '../screen/style';
 
 const ProductCart = ({item, navigation}) => {
-  console.log(navigation);
+  // console.log(navigation);
   return (
     <Card
       containerStyle={{
@@ -53,7 +53,9 @@ const ProductCart = ({item, navigation}) => {
           style={{flexDirection: 'row', alignSelf: 'flex-end', marginTop: 15}}>
           <Button
             style={styles.btn}
-            onPress={() => navigation.navigate('Detail', {id: item.id})}>
+            onPress={() =>
+              navigation.navigate('Detail', {id: item.id, name: item.name})
+            }>
             <Text>details</Text>
           </Button>
           <Button style={styles.btn}>
