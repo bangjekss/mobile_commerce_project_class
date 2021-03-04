@@ -16,9 +16,8 @@ const ProductScreen = ({route, navigation}) => {
   const {productList} = useSelector((state) => state.productReducer);
   const {cart} = useSelector((state) => state.cartReducer);
   const product = productList.find((value) => value.id === id);
-  console.log(userID);
-  const handleBuyBtn = () => {
-    const existProduct = cart.find((value) => value.productID === id);
+  const existProduct = cart.find((value) => value.productID === id);
+  const handleBuyBtn = async () => {
     console.log(route.params);
     if (existProduct) {
       const payload = {
@@ -26,16 +25,16 @@ const ProductScreen = ({route, navigation}) => {
         id: existProduct.id,
         quantity: existProduct.quantity + qty,
       };
-      dispatch(changeQtyCartAction(payload));
-      alert('qty changed');
-      return navigation.goBack();
+      await dispatch(changeQtyCartAction(payload));
+      navigation.goBack();
     } else {
       const payload = {
         userID,
         productID: id,
         quantity: qty,
       };
-      dispatch(addToCartAction(payload));
+      await dispatch(addToCartAction(payload));
+      navigation.goBack();
     }
   };
   return (

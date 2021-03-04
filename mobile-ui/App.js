@@ -4,7 +4,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {Provider, useDispatch} from 'react-redux';
 import {configureStore} from '@reduxjs/toolkit';
 import reducer from './src/redux/reducer';
-import {AuthStack, Main} from './src/navigation';
+// import reducer from './private/redux/reducer';
+// latian
+import {Main} from './src/navigation';
+// import {Main} from './private/navigation';
 
 const store = configureStore({
   reducer,

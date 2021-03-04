@@ -1,4 +1,4 @@
-const router = require("express").Router();
+const router = require('express').Router();
 const {
   cartController: {
     addToCart,
@@ -6,13 +6,15 @@ const {
     editQuantityCart,
     deleteCartById,
     emptyCartByUserID,
+    changeIsCheckedCart,
   },
-} = require("../controllers");
+} = require('../controllers');
 
-router.get("/:id", getCartByID);
-router.post("/:id", addToCart);
-router.patch("/:id", editQuantityCart);
-router.delete("/:id", deleteCartById);
-router.delete("/clear/:id", emptyCartByUserID);
+router.get('/:id', getCartByID);
+router.post('/:id', addToCart);
+router.patch('/:id', editQuantityCart);
+router.patch('/change-checked/:id', changeIsCheckedCart);
+router.delete('/:id', deleteCartById);
+router.delete('/clear/:id', emptyCartByUserID);
 
 module.exports = router;

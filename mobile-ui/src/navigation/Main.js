@@ -1,18 +1,16 @@
-import React, {useState, useEffect} from 'react';
-import {Button} from 'react-native';
+import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {keepLoginAction} from '../redux/action';
-import {AuthStack, HomeTab} from './';
+import {AuthStack, HomeDrawer} from './';
 
 const Main = () => {
-  // const dispatch = useDispatch();
   const dispatch = useDispatch();
+  const {isLogin} = useSelector((state) => state.authReducer);
   useEffect(() => {
     dispatch(keepLoginAction());
   }, []);
-  const {isLogin} = useSelector((state) => state.authReducer);
 
-  return <>{isLogin ? <HomeTab /> : <AuthStack />}</>;
+  return <>{isLogin ? <HomeDrawer /> : <AuthStack />}</>;
 };
 
 export default Main;

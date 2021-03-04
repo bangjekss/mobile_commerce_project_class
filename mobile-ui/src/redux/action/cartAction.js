@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {Alert} from 'react-native';
 import {local} from '../../../local_ip';
 import {
   ADD_TO_CART,
@@ -10,6 +11,7 @@ import {
 } from '../type';
 
 const url = `${local}/cart`;
+const url_transaction = `${local}/transaction`;
 
 const addToCartAction = (payload) => {
   return async (dispatch) => {
@@ -19,9 +21,9 @@ const addToCartAction = (payload) => {
       const {userID} = payload;
       console.log(payload);
       await axios.post(`${url}/${userID}`, payload);
-      dispatch({type: ADD_TO_CART, payload});
+      await dispatch(getCartAction(userID));
       dispatch({type: API_LOADING_SUCCESS});
-      alert('Succesfully add to your cart');
+      Alert.alert('Succesfully add to your cart');
     } catch (err) {
       console.log(err.response);
       dispatch({type: API_LOADING_FAILED, payload: err.response.data.error});
@@ -52,9 +54,9 @@ const changeQtyCartAction = (payload) => {
     try {
       const {quantity, id, userID} = payload;
       await axios.patch(`${url}/${id}`, {quantity});
-      dispatch(getCartAction(userID));
+      await dispatch(getCartAction(userID));
       dispatch({type: API_LOADING_SUCCESS});
-      // alert('qty changed');
+      Alert.alert('qty changed');
     } catch (err) {
       console.log(err.response);
       dispatch({type: API_LOADING_FAILED, payload: err.response.data.error});
@@ -79,4 +81,25 @@ const deleteCartAction = (payload) => {
   };
 };
 
-export {addToCartAction, getCartAction, changeQtyCartAction, deleteCartAction};
+const changeIsCheckedCartAction = (payload) => {
+  return async (dispatch) => {
+    dispatch({type: NULLIFY_ERROR});
+    dispatch({type: API_LOADING_START});
+    try {
+      await axios.patch(`${url}/change-checked/${payload.id}`, payload);
+      await dispatch(getCartAction(payload.userID));
+      dispatch({type: API_LOADING_SUCCESS});
+    } catch (err) {
+      console.log(err.response);
+      dispatch({type: API_LOADING_FAILED, payload: err.response.data.error});
+    }
+  };
+};
+
+export {
+  addToCartAction,
+  getCartAction,
+  changeQtyCartAction,
+  deleteCartAction,
+  changeIsCheckedCartAction,
+};

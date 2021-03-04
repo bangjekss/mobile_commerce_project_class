@@ -1,8 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {LoginScreen, RegisterScreen} from '../screen/auth';
-import {useDispatch} from 'react-redux';
-import {keepLoginAction} from '../redux/action';
 
 const Stack = createStackNavigator();
 

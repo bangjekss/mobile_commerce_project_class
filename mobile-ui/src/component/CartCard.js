@@ -19,12 +19,35 @@ import {
   surface_color,
 } from '../screen/style';
 import {useDispatch, useSelector} from 'react-redux';
-import {changeQtyCartAction, deleteCartAction} from '../redux/action';
+import {
+  changeIsCheckedCartAction,
+  changeQtyCartAction,
+  deleteCartAction,
+} from '../redux/action';
 
 const CartCard = ({item, navigation}) => {
   const dispatch = useDispatch();
   const userID = useSelector((state) => state.authReducer.id);
-  const {cart} = useSelector((state) => state.cartReducer);
+  // const {cart} = useSelector((state) => state.cartReducer);
+  const [cek, setCek] = useState(true);
+  useEffect(() => {
+    if (item.checkID === 1) setCek(false);
+    if (item.checkID === 2) setCek(true);
+  }, []);
+
+  // useEffect(() => {
+  // }, [dispatch, cek]);
+
+  const handleCheckBox = () => {
+    setCek(!cek);
+    const payload = {
+      id: item.id,
+      userID,
+      checkID: cek ? 1 : 2,
+    };
+    dispatch(changeIsCheckedCartAction(payload));
+  };
+
   const handleDecreaseBtn = () => {
     const {id, quantity} = item;
     const payload = {
@@ -51,7 +74,6 @@ const CartCard = ({item, navigation}) => {
     };
     dispatch(deleteCartAction(payload));
   };
-  const [cek, setCek] = useState(true);
   return (
     <Card
       containerStyle={{
@@ -75,7 +97,9 @@ const CartCard = ({item, navigation}) => {
           height: Dimensions.get('screen').width / 2.7,
         }}>
         <Card.Image
-          source={{uri: `${local}${item.image[0].imagepath}`}}
+          source={{
+            uri: item.image ? `${local}${item.image[0].imagepath}` : null,
+          }}
           style={styles.image}
         />
       </View>
@@ -104,7 +128,7 @@ const CartCard = ({item, navigation}) => {
               <CheckBox
                 color={surface_color}
                 checked={cek}
-                onPress={() => setCek(!cek)}
+                onPress={handleCheckBox}
               />
             </ListItem>
           </View>

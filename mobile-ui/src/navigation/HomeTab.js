@@ -1,41 +1,12 @@
-import {Button, Text, View, Icon} from 'native-base';
-import React, {useState, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {getCartAction, logoutAction} from '../redux/action';
+import {Icon} from 'native-base';
+import React from 'react';
+import {useSelector} from 'react-redux';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {surface_color} from '../screen/style';
-import {ProductStack} from '.';
-import {cartScreen} from '../screen/product';
+import {CartStack, ProductStack} from '.';
+import {PostScreen} from '../screen/post';
 
 const Tab = createBottomTabNavigator();
-const Post = () => {
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logoutAction());
-  };
-  return (
-    <View>
-      <Text>Post</Text>
-      <Button onPress={handleLogout}>
-        <Text>logout</Text>
-      </Button>
-    </View>
-  );
-};
-const Cart = () => {
-  const dispatch = useDispatch();
-  const handleLogout = () => {
-    dispatch(logoutAction());
-  };
-  return (
-    <View>
-      <Text>Cart</Text>
-      <Button onPress={handleLogout}>
-        <Text>logout</Text>
-      </Button>
-    </View>
-  );
-};
 
 const HomeTab = () => {
   const {cart} = useSelector((state) => state.cartReducer);
@@ -47,9 +18,6 @@ const HomeTab = () => {
         inactiveTintColor: 'gray',
       }}
       screenOptions={({route}) => ({
-        // tabBarBadge: () => {
-
-        // },
         tabBarIcon: ({color}) => {
           let icon;
           if (route.name === 'Post') icon = 'plus';
@@ -59,10 +27,10 @@ const HomeTab = () => {
         },
       })}>
       <Tab.Screen name="Feed" component={ProductStack} />
-      <Tab.Screen name="Post" component={Post} />
+      <Tab.Screen name="Post" component={PostScreen} />
       <Tab.Screen
         name="Cart"
-        component={cartScreen}
+        component={CartStack}
         options={{tabBarBadge: cart.length >= 1 ? cart.length : null}}
       />
     </Tab.Navigator>

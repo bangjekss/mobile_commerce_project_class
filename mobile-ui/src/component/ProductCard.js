@@ -3,11 +3,9 @@ import {Button, Text, View} from 'native-base';
 import {Card, ListItem, Icon} from 'react-native-elements';
 import {Dimensions, Image, ScrollView, StyleSheet} from 'react-native';
 import {local} from '../../local_ip';
-import {lorem} from 'faker';
 import {background_color, primary_color, surface_color} from '../screen/style';
 
 const ProductCart = ({item, navigation}) => {
-  // console.log(navigation);
   return (
     <Card
       containerStyle={{
@@ -30,7 +28,11 @@ const ProductCart = ({item, navigation}) => {
           alignItems: 'center',
         }}>
         <Card.Image
-          source={{uri: `${local}${item.image[0].imagepath}`}}
+          source={{
+            uri:
+              item.image.length > 0 ? `${local}${item.image[0].imagepath}` : '',
+            // uri: item.image,
+          }}
           style={styles.image}
         />
       </View>

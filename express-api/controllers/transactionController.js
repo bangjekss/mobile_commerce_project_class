@@ -1,5 +1,5 @@
-const con = require("../database");
-const moment = require("moment");
+const con = require('../database');
+const moment = require('moment');
 
 module.exports = {
   getTransactionsByUserID: async (req, res, next) => {
@@ -8,10 +8,13 @@ module.exports = {
         transactionData,
       ] = await con
         .promise()
-        .query(`select * from transaction where userID = ?`, [req.params.id]);
-      const [transactionItems] = await con
-        .promise()
-        .query(`select * from transaction_item`);
+        .query(`select * from transaction where userID = ? order by id desc`, [req.params.id]);
+      const [transactionItems] = await con.promise().query(`
+          SELECT 
+            ti.id, ti.transactionID, p.name, ti.quantity, ti.price, ti.imagepath
+          FROM transaction_item ti
+          JOIN products p ON p.id = ti.productID
+        `);
       const response = transactionData.map((val) => {
         return {
           ...val,
@@ -28,32 +31,42 @@ module.exports = {
   postTransaction: async (req, res, next) => {
     try {
       const { items } = req.body;
-      const date = new Date();
-      let total_amount = 0;
-      items.forEach((element) => {
-        total_amount += element.price * element.quantity;
+      console.log(items);
+      const detailDate = new Date();
+      let totalPrice = 0;
+      items.forEach((value) => {
+        totalPrice += value.price * value.quantity;
+        value.imagepath = value.image[0].imagepath;
       });
-      const transactionBody = { userID: req.params.id, date, total_amount };
-      const [
-        transaction,
-      ] = await con
+      const transactionBody = {
+        userID: req.params.id,
+        statusID: 1,
+        totalPrice,
+        detailDate,
+        date: detailDate.getDate(),
+        month: detailDate.getMonth(),
+        year: detailDate.getFullYear(),
+      };
+      console.log(items[0]);
+      const [transaction] = await con
         .promise()
         .query(`insert into transaction set ?`, [transactionBody]);
       const values = [];
-      items.forEach(({ productID, quantity, price }) => {
-        values.push([productID, quantity, transaction.insertId, price]);
+      items.forEach(({ productID, quantity, price, imagepath }) => {
+        values.push([productID, quantity, transaction.insertId, price, imagepath]);
       });
       const [
         transactionItems,
       ] = await con
         .promise()
         .query(
-          `insert into transaction_item (productID, quantity, transactionID, price) values ?`,
+          `insert into transaction_item (productID, quantity, transactionID, price, imagepath) values ?`,
           [values]
         );
+
       return res
         .status(200)
-        .send({ id: transaction.insertId, status: "created" });
+        .send({ id: transaction.insertId, status: 'created', items, transactionBody, values });
     } catch (err) {
       next(err);
     }

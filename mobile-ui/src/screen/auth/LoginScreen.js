@@ -1,23 +1,16 @@
 import {
-  Body,
   Button,
   Container,
-  Content,
-  Footer,
-  Form,
-  Header,
   Icon,
   Input,
   Item,
   Label,
-  Left,
-  Right,
   Text,
   View,
 } from 'native-base';
 import {Grid, Row, Col} from 'react-native-easy-grid';
-import React, {useState, useEffect} from 'react';
-import {Dimensions, Image, Modal, ScrollView, StyleSheet} from 'react-native';
+import React, {useState} from 'react';
+import {Dimensions, Image, ScrollView, StyleSheet} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {AuthModal} from '../../component';
 import {loginAction} from '../../redux/action';
@@ -32,7 +25,6 @@ const LoginScreen = ({navigation}) => {
   const [password, setPassword] = useState(null);
 
   const handleLoginBtn = () => {
-    console.log(username, password);
     const payload = {
       username,
       password,

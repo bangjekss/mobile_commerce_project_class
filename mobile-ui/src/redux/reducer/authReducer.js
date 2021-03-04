@@ -5,6 +5,7 @@ const {
   NULLIFY_ERROR,
   AUTH_LOGOUT,
   AUTH_SIGN,
+  GET_ADDRESS,
 } = require('../type');
 
 const INITIAL_STATE = {
@@ -16,6 +17,7 @@ const INITIAL_STATE = {
   isLoading: false,
   isError: false,
   errorMessage: null,
+  address: [],
 };
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -54,6 +56,11 @@ const authReducer = (state = INITIAL_STATE, action) => {
       };
     case AUTH_LOGOUT:
       return INITIAL_STATE;
+    case GET_ADDRESS:
+      return {
+        ...state,
+        address: action.payload,
+      };
     default:
       return state;
   }
